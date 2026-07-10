@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,11 @@ public class Movement : MonoBehaviour
     [SerializeField] float rotationStrength = 100f;
     Rigidbody rb;
     [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip mainEngine;
+    [SerializeField] ParticleSystem mainEngineParticles;
+    [SerializeField] ParticleSystem rightEngineParticles;
+    [SerializeField] ParticleSystem leftEngineParticles;
+
 
     void OnEnable()
     {
@@ -41,7 +47,6 @@ public class Movement : MonoBehaviour
         else if (rotationInput < 0)
         {
             ImplementRotation(rotationStrength);
-
         }
     }
 
@@ -59,12 +64,21 @@ public class Movement : MonoBehaviour
             rb.AddRelativeForce(Vector3.up * thrustStrenght * Time.fixedDeltaTime);
             if (!audioSource.isPlaying)
             {
-                audioSource.Play();
+                audioSource.PlayOneShot(mainEngine);
+            }
+            if (!mainEngineParticles.isPlaying)
+            {
+                mainEngineParticles.Play();
+                leftEngineParticles.Play();
+                rightEngineParticles.Play();
             }
         }
         else
         {
             audioSource.Stop();
+            mainEngineParticles.Stop();
+            leftEngineParticles.Stop();
+            rightEngineParticles.Stop();
         }
     }
 }
